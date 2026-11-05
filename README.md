@@ -1,6 +1,6 @@
 # 🚀 DownloadIn - All-in-One Social Media Downloader
 
-**DownloadIn** adalah aplikasi web full-stack modern, ringan, dan cepat yang berfungsi sebagai pengunduh media serbaguna (All-in-One Social Media Downloader). Mendukung pengunduhan dari **TikTok, Instagram, Facebook, X (Twitter), YouTube**, serta platform lainnya tanpa memerlukan login akun.
+**DownloadIn** adalah aplikasi web full-stack modern, ringan, dan cepat yang berfungsi sebagai pengunduh media serbaguna (All-in-One Social Media Downloader). Mendukung pengunduhan dari **TikTok, Instagram, Facebook, X (Twitter), YouTube**, serta platform lainnya tanpa memerlukan login akun. Bebas Iklan dan biaya apapun, cukup install saja apa yang diperlukan. kalo ada eror benerin sendiri ya wkwkwkk.
 
 ---
 
@@ -99,10 +99,6 @@ npm install
   ```bash
   npm start
   ```
-- **Mode Pengembangan (Auto-reload):**
-  ```bash
-  npm run dev
-  ```
 
 Buka peramban (browser) Anda dan akses:
 👉 **[http://localhost:3000](http://localhost:3000)**
@@ -111,99 +107,9 @@ Buka peramban (browser) Anda dan akses:
 
 ## 🔒 Kebijakan Konten Publik (Tanpa Login & Tanpa Cookies)
 
-DownloadIn didesain murni untuk mengunduh konten **Publik** secara cepat dan anonim:
-- Tidak membutuhkan akun pengguna, session cookie, maupun konfigurasi file `cookies.txt`.
+DownloadIn didesain murni untuk mengunduh konten **Publik** secara cepat dan anonim.
 - Jika tautan berasal dari **Akun Private**, Story untuk **Close Friends**, atau konten yang dibatasi oleh platform, sistem akan langsung menampilkan pesan ramah:
   > *"Tidak dapat mengunduh konten ini karena berasal dari Akun Private, Story yang dibatasi, atau tautan sudah tidak tersedia. Pastikan akun dan postingan bersifat Publik."*
-
----
-
-## 📡 Dokumentasi Endpoint API
-
-Aplikasi menyediakan REST API internal yang dapat diintegrasikan dengan aplikasi lain:
-
-### 1. `GET /api/health`
-Memeriksa status server, ketersediaan modul `yt-dlp`, dan status mode publik.
-- **Respon:**
-  ```json
-  {
-    "status": "ok",
-    "service": "DownloadIn API",
-    "version": "1.2.0",
-    "mode": "public_no_login",
-    "extractor": { "available": true },
-    "ffmpeg": { "available": true }
-  }
-  ```
-
-### 2. `POST /api/extract`
-Mengekstrak informasi metadata, format video/audio, dan slide gambar.
-- **Request Body:**
-  ```json
-  {
-    "url": "https://www.tiktok.com/@username/video/123456789",
-    "platform": "auto",
-    "forceIgnoreMismatch": false
-  }
-  ```
-- **Respon Sukses (200 OK):**
-  ```json
-  {
-    "success": true,
-    "data": {
-      "id": "123456789",
-      "title": "Koleksi Video Keren",
-      "uploader": "username",
-      "thumbnail": "https://...",
-      "duration": 45,
-      "durationFormatted": "0:45",
-      "platform": "tiktok",
-      "platformName": "TikTok",
-      "isStory": false,
-      "contentType": "video",
-      "downloads": {
-        "videos": [
-          {
-            "quality": "Full HD (1080p)",
-            "ext": "mp4",
-            "filesizeFormatted": "12.4 MB",
-            "downloadUrl": "http://localhost:3000/api/download?..."
-          }
-        ],
-        "audios": [
-          {
-            "quality": "MP3 Audio (Kualitas Tinggi 320kbps)",
-            "ext": "mp3",
-            "downloadUrl": "http://localhost:3000/api/download?..."
-          }
-        ],
-        "images": []
-      }
-    }
-  }
-  ```
-
-### 3. `GET /api/download-file` (Core Downloader Engine)
-Mengunduh dan menggabungkan media (muxing) di backend menggunakan `yt-dlp` dan `ffmpeg-static` dengan codec H.264 (avc1) & AAC (mp4a), lalu mengirimkannya ke user:
-- **Query Params:**
-  - `sourceUrl`: Tautan asli postingan (TikTok, YouTube, Facebook, X, IG)
-  - `type`: `video` atau `audio`
-  - `quality`: `hd` (1080p+ bitrate maksimal) atau `sd` (480p hemat data)
-  - `height`: Batas resolusi (misal `1080`, `480`)
-  - `ext`: `mp4` atau `mp3`
-  - `title`: Judul file keluaran (otomatis disanitasi maksimal 55 karakter)
-- **Fitur Otomatis:**
-  - Integrasi otomatis `ffmpeg-static` via `--ffmpeg-location` untuk muxing YouTube 1080p tanpa mentok di 360p.
-  - Memaksa container output video selalu `.mp4` (mencegah Facebook Reels jatuh ke `.m4a`).
-  - Mengirim header `Referer` sesuai platform (mencegah error `download.htm` TikTok).
-  - Mengonversi ke MP3 320kbps jika opsi musik dipilih.
-  - Menghapus file sementara di folder `temp/` secara otomatis setelah selesai streaming.
-
-### 4. `GET /api/download`
-Streaming proxy khusus untuk gambar, slide foto, dan thumbnail dengan header referer anti-hotlinking.
-
-### 5. `POST /api/download-zip`
-Membuat file ZIP dinamis secara langsung (*stream on the fly*) untuk mengunduh semua foto carousel atau slide dalam satu paket.
 
 ---
 
