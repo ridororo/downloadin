@@ -1,0 +1,37 @@
+{
+  "name": "downloadin",
+  "version": "1.1.0",
+  "description": "All-in-One Social Media Downloader (TikTok, Instagram, Facebook, X, YouTube, Stories, Audio, and Photos)",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "setup": "node scripts/setup-ytdlp.js"
+  },
+  "keywords": [
+    "downloader",
+    "social-media",
+    "tiktok-downloader",
+    "instagram-downloader",
+    "youtube-downloader",
+    "facebook-downloader",
+    "twitter-downloader",
+    "yt-dlp",
+    "stories-downloader"
+  ],
+  "author": "DownloadIn Team",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "axios": "^1.7.2",
+    "btch-downloader": "^6.4.0",
+    "cakkatrok-instagram-downloader": "^2.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ffmpeg-static": "^5.3.0",
+    "ruhend-scraper": "^10.0.3",
+    "sanitize-filename": "^1.6.3"
+  }
+}

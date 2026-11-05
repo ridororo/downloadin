@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DownloadIn - All-in-One Social Media Downloader</title>
+  <meta name="description" content="Unduh Video, Reels, Shorts, Audio MP3, Foto Carousel, dan Stories dari TikTok, Instagram, Facebook, X, YouTube tanpa watermark secara gratis dan instan.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z'/></svg>">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-indigo-500 selection:text-white transition-colors duration-300">
+
+  <!-- Background Ambient Glow -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-indigo-600/20 rounded-full blur-[140px]"></div>
+    <div class="absolute top-1/3 -left-40 w-[450px] h-[450px] bg-cyan-600/15 rounded-full blur-[140px]"></div>
+    <div class="absolute bottom-10 -right-40 w-[500px] h-[500px] bg-violet-600/15 rounded-full blur-[140px]"></div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Navbar (Static / Relative scrolling) -->
+  <header class="relative z-10 border-b border-slate-800/80 bg-slate-950/90">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30 group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-sky-300 to-white bg-clip-text text-transparent">
+            Download<span class="text-cyan-400">In</span>
+          </span>
+          <span class="hidden sm:inline-block ml-2 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800/50">v1.1</span>
+        </div>
+      </a>
+
+      <!-- Right Nav Controls (Full Dark Mode Locked) -->
+      <div class="flex items-center gap-3">
+        <!-- Server Status Badge -->
+        <div id="server-status-badge" class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-slate-900 border border-slate-800">
+          <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+          <span class="text-slate-400">Memeriksa server...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="relative z-10 max-w-4xl mx-auto px-4 pt-10 pb-20">
+    
+    <!-- Hero Header -->
+    <div class="text-center space-y-4 mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-950/80 text-indigo-300 border border-indigo-700/40 shadow-inner">
+        <svg class="w-4 h-4 text-cyan-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+        </svg>
+        <span>All-in-One Social Media Downloader Bebas Watermark</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-100">
+        Unduh Video, Audio, Foto, &amp; <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-cyan-400 bg-clip-text text-transparent">Stories</span>
+      </h1>
+
+      <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+        Mendukung TikTok, Instagram, Facebook, X (Twitter), YouTube, dan platform lainnya tanpa perlu login, 100% gratis dengan kualitas tertinggi.
+      </p>
+    </div>
+
+    <!-- Platform Selector Pills -->
+    <div class="mb-5 overflow-x-auto pb-2 scrollbar-none">
+      <div class="flex items-center justify-center gap-2 min-w-max px-2">
+        <button type="button" data-platform="auto" class="platform-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-500/25">
+          <svg class="w-4 h-4 text-cyan-300" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+          <span>Auto-detect</span>
+        </button>
+
+        <button type="button" data-platform="tiktok" class="platform-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border bg-slate-800/80 text-slate-300 border-slate-700/60 hover:border-slate-500 hover:text-white">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+          </svg>
+          <span>TikTok</span>
+        </button>
+
+        <button type="button" data-platform="instagram" class="platform-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border bg-slate-800/80 text-slate-300 border-slate-700/60 hover:border-slate-500 hover:text-white">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          <span>Instagram</span>
+        </button>
+
+        <button type="button" data-platform="facebook" class="platform-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border bg-slate-800/80 text-slate-300 border-slate-700/60 hover:border-slate-500 hover:text-white">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/>
+          </svg>
+          <span>Facebook</span>
+        </button>
+
+        <button type="button" data-platform="twitter" class="platform-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border bg-slate-800/80 text-slate-300 border-slate-700/60 hover:border-slate-500 hover:text-white">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          <span>X / Twitter</span>
+        </button>
+
+        <button type="button" data-platform="youtube" class="platform-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border bg-slate-800/80 text-slate-300 border-slate-700/60 hover:border-slate-500 hover:text-white">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span>YouTube</span>
+        </button>
+
+        <button type="button" data-platform="other" class="platform-pill flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border bg-slate-800/80 text-slate-300 border-slate-700/60 hover:border-slate-500 hover:text-white">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+          </svg>
+          <span>Lainnya</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- URL Input Box with Glowing Border -->
+    <div class="relative group mb-3">
+      <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-sky-500 to-cyan-500 rounded-2xl blur-md opacity-25 group-focus-within:opacity-75 transition duration-300"></div>
+      
+      <div class="relative flex flex-col sm:flex-row items-stretch sm:items-center bg-slate-900 border border-slate-700/80 rounded-2xl p-2 gap-2 shadow-2xl">
+        <!-- Input Field -->
+        <div class="relative flex-1 flex items-center">
+          <div class="pl-3.5 pr-2 text-slate-400">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+            </svg>
+          </div>
+          <input
+            id="url-input"
+            type="url"
+            placeholder="Tempel tautan video, reel, carousel, atau stories di sini..."
+            autocomplete="off"
+            class="w-full bg-transparent py-3 pr-9 text-sm text-slate-100 placeholder-slate-500 focus:outline-none"
+          />
+          <!-- Clear Button -->
+          <button id="clear-btn" type="button" class="hidden absolute right-3 p-1 rounded-full text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Action Buttons (Paste & Download) -->
+        <div class="flex items-center gap-2 px-1 pb-1 sm:p-0">
+          <!-- Quick Paste Button -->
+          <button
+            id="paste-btn"
+            type="button"
+            class="flex items-center gap-1.5 px-3.5 py-3 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700/90 text-slate-200 border border-slate-700 transition-all shrink-0 active:scale-95"
+            title="Tempel dari Clipboard"
+          >
+            <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <span>Tempel</span>
+          </button>
+
+          <!-- Download Action Button -->
+          <button
+            id="download-btn"
+            type="button"
+            class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white shadow-lg shadow-indigo-600/30 transition-all shrink-0 active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            <!-- Spinner -->
+            <svg id="download-btn-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span id="download-btn-text">Unduh</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Mismatch Alert Banner (Conditional) -->
+    <div id="mismatch-banner" class="hidden mb-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-200">
+      <div class="flex items-center gap-2.5">
+        <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span id="mismatch-text">Tautan terdeteksi berbeda platform.</span>
+      </div>
+      <button id="mismatch-switch-btn" type="button" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition-colors shrink-0">
+        Beralih Platform
+      </button>
+    </div>
+
+    <!-- Stories Notice Banner (Conditional) -->
+    <div id="story-banner" class="hidden mb-4 p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center gap-2.5 text-xs text-indigo-200">
+      <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+      </svg>
+      <span>Tautan <strong>Stories</strong> terdeteksi. Pastikan akun dan postingan bersifat <strong>Publik</strong> agar dapat diproses langsung tanpa login.</span>
+    </div>
+
+    <!-- Loading Skeleton Card -->
+    <div id="loading-skeleton" class="hidden my-8 p-6 rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+        <span id="loading-stage-text" class="text-sm font-medium text-slate-300">Menganalisis format tautan...</span>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Thumbnail Skeleton -->
+        <div class="w-full md:w-72 h-44 rounded-xl skeleton-shimmer shrink-0"></div>
+        <!-- Info Skeleton -->
+        <div class="flex-1 space-y-3">
+          <div class="h-5 w-3/4 rounded-lg skeleton-shimmer"></div>
+          <div class="h-4 w-1/3 rounded-lg skeleton-shimmer"></div>
+          <div class="h-4 w-1/2 rounded-lg skeleton-shimmer"></div>
+          <div class="pt-4 flex gap-3">
+            <div class="h-10 w-32 rounded-xl skeleton-shimmer"></div>
+            <div class="h-10 w-32 rounded-xl skeleton-shimmer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Card with Retry Button -->
+    <div id="error-container" class="hidden my-8 p-6 rounded-2xl border border-rose-500/30 bg-rose-950/20 backdrop-blur-xl">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 id="error-title" class="text-base font-bold text-rose-200">Gagal Mengambil Konten</h3>
+          <p id="error-message" class="text-sm text-slate-300 mt-1 leading-relaxed">
+            Konten ini mungkin berasal dari akun privat, atau link yang dimasukkan salah.
+          </p>
+          <div id="error-detail" class="hidden text-xs text-slate-400 bg-slate-900/60 p-3 rounded-lg mt-3 font-mono break-all border border-slate-800"></div>
+
+          <div class="mt-4 flex items-center gap-3">
+            <button id="retry-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-all shadow-lg shadow-rose-950/40">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              <span>Coba Lagi</span>
+            </button>
+            <span class="text-xs text-slate-400">Pastikan link dapat dibuka publik di browser.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result / Download Preview Card -->
+    <div id="result-container" class="hidden my-8 p-6 rounded-2xl border border-slate-800/90 bg-slate-900/70 backdrop-blur-2xl shadow-2xl transition-all">
+      
+      <!-- Top Media Metadata Header -->
+      <div class="flex flex-col md:flex-row gap-6 pb-6 border-b border-slate-800">
+        <!-- Thumbnail Container -->
+        <div class="relative w-full md:w-80 h-52 rounded-xl overflow-hidden bg-slate-950 border border-slate-800 shrink-0 group">
+          <img id="res-thumbnail" src="" alt="Thumbnail Media" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          
+          <!-- Badges on Thumbnail -->
+          <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">
+            <span id="res-platform-badge" class="px-2.5 py-1 rounded-full text-xs font-semibold shadow-md">TikTok</span>
+            <span id="res-story-badge" class="hidden px-2.5 py-1 rounded-full text-xs font-semibold bg-pink-600 text-white shadow-md">Story</span>
+          </div>
+
+          <div id="res-duration" class="hidden absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-xs font-semibold text-white">
+            0:45
+          </div>
+        </div>
+
+        <!-- Title, Author, Description -->
+        <div class="flex-1 flex flex-col justify-between">
+          <div>
+            <h2 id="res-title" class="text-lg sm:text-xl font-bold text-slate-100 line-clamp-2 leading-snug">
+              Judul Video / Deskripsi Konten
+            </h2>
+            <div class="flex items-center gap-2 mt-2">
+              <span id="res-uploader" class="text-xs font-medium text-indigo-400">@username</span>
+              <span class="text-slate-600">•</span>
+              <span class="text-xs text-slate-400">Konten Publik</span>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>Tautan unduhan bersih tanpa tanda air (no watermark) telah disiapkan.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download Option Tabs -->
+      <div class="pt-6">
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-3 mb-4">
+          <button id="tab-btn-video" type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:text-white">
+            🎬 Video (MP4)
+          </button>
+          <button id="tab-btn-audio" type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:text-white">
+            🎵 Audio (MP3/M4A)
+          </button>
+          <button id="tab-btn-photos" type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:text-white">
+            🖼️ Foto / Carousel
+          </button>
+          <button id="tab-btn-stories" type="button" class="hidden tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:text-white">
+            📖 Stories / Slides (<span id="stories-count-badge">0</span>)
+          </button>
+        </div>
+
+        <!-- Tab 1: Video Content -->
+        <div id="tab-content-video" class="space-y-3">
+          <div id="video-options-list" class="space-y-2.5">
+            <!-- Dynamic Video Items -->
+          </div>
+        </div>
+
+        <!-- Tab 2: Audio Content -->
+        <div id="tab-content-audio" class="hidden space-y-3">
+          <div id="audio-options-list" class="space-y-2.5">
+            <!-- Dynamic Audio Items -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Photos / Carousel Content -->
+        <div id="tab-content-photos" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400 font-medium">Koleksi foto / slide resolusi tinggi</span>
+            <button id="bulk-download-zip-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition-all">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              <span>Unduh Semua (ZIP)</span>
+            </button>
+          </div>
+          <div id="photo-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <!-- Dynamic Photo Items -->
+          </div>
+        </div>
+
+        <!-- Tab 4: Stories Content (Multi-Story / Multi-Slide) -->
+        <div id="tab-content-stories" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-400 font-medium">Pilih item Story / Slide yang ingin Anda unduh:</span>
+          </div>
+          <div id="stories-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <!-- Dynamic Stories Items -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Grid Section -->
+    <section class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-bold text-slate-200">Tanpa Watermark</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Otomatis menghapus watermark pada video TikTok dan Instagram Reels untuk hasil rekaman yang bersih.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-bold text-slate-200">Kualitas 1080p &amp; 4K</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Mendukung format video resolusi tertinggi hingga 4K UHD, 60fps, serta opsi resolusi hemat kuota.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-3">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-bold text-slate-200">Audio MP3 320kbps</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Ekstraksi musik latar dan sound trending ke dalam format MP3 atau M4A berkualitas jernih.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 mb-3">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-bold text-slate-200">Slide Foto &amp; Carousel</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Dukungan postingan multi-foto TikTok dan Instagram Carousel lengkap dengan opsi unduh ZIP 1-klik.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-3">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-bold text-slate-200">Tanpa Login / Registrasi</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Gunakan langsung tanpa registrasi akun. Privasi Anda terjaga tanpa pelacakan data pribadi.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-3">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <h3 class="text-sm font-bold text-slate-200">Stories &amp; Konten Publik</h3>
+        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+          Mendukung pengunduhan Instagram Stories dan Facebook Stories publik secara instan tanpa perlu login atau cookies.
+        </p>
+      </div>
+    </section>
+
+    <!-- How to Download Section -->
+    <section class="mt-16 p-8 rounded-2xl bg-slate-900/40 border border-slate-800">
+      <h2 class="text-lg font-bold text-slate-100 text-center mb-6">Cara Mengunduh Media di DownloadIn</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center font-bold text-xs shrink-0">
+            1
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-200">Salin Tautan Media</h4>
+            <p class="text-xs text-slate-400 mt-1">
+              Buka aplikasi TikTok, Instagram, FB, X, atau YouTube lalu salin tautan (Copy Link) dari postingan atau Story.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-xs shrink-0">
+            2
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-200">Tempel di DownloadIn</h4>
+            <p class="text-xs text-slate-400 mt-1">
+              Klik tombol "Tempel" atau tekan Ctrl+V pada kolom input, lalu tekan tombol "Unduh".
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-xs shrink-0">
+            3
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-200">Pilih Kualitas &amp; Simpan</h4>
+            <p class="text-xs text-slate-400 mt-1">
+              Pilih format Video (1080p/4K), Audio MP3, atau Foto Carousel, dan file langsung tersimpan di perangkat Anda.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-slate-800/80 bg-slate-950 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-4xl mx-auto px-4 space-y-3">
+      <p>
+        &copy; 2026 <strong class="text-slate-400">DownloadIn</strong>. All rights reserved. Dibuat untuk tujuan edukasi dan arsip pribadi.
+      </p>
+      <p class="text-[11px] text-slate-600">
+        DownloadIn tidak menyimpan media berhak cipta pada server. Seluruh konten diunduh langsung dari CDN resmi masing-masing platform sosial media.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/toast.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
+
